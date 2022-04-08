@@ -67,10 +67,10 @@ pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* con
 // Get the size of image data in bytes. Depth must be 8 or 16. Color may not be PNGW_COLOR_PALETTE. 
 pngw_error pngwDataSize(const size_t width, const size_t height, const size_t depth, const pngw_color color, size_t* const size);
 
-// Read png data from a file into a pixel byte array with the specified format. Data should be allocated before this function is called with enough space to contain the bytes. If the file is of a different format than specified in the arguments, the image will be converted on load. Depth must be 8 or 16. Color may not be PNGW_COLOR_PALETTE.
+// Read png data from a file into a pixel byte array with the specified format. Data should be allocated before this function is called with enough space to contain the bytes. If the file is of a different format than specified in the arguments, the image will be converted on load. Depth must be 8 or 16. Color may not be PNGW_COLOR_PALETTE. Width and height must match the actual width and height of the image, which you can retrieve with pngwFileInfo() before loading. 
 pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_t row_offset, const size_t width, const size_t height, const size_t depth, const pngw_color color);
 
-// Save png data to a file from a pixel byte array. Depth must be 8 or 16. Color may not be PNGW_COLOR_PALETTE.
+// Save png data to a file from a pixel byte array. The width, height, depth and color must be be the same as the format of data bytes.
 pngw_error pngwWriteFile(const char* path, pngwb_t* const data, const size_t row_offset, const size_t width, const size_t height, const size_t depth, const pngw_color color);
 
 // Convert an 8 bit depth RGB color to a grayscale value using libpng's default conversion equation.
