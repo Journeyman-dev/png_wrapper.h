@@ -40,7 +40,7 @@ int main()
 
 	if (!data)
 	{
-		printf("an error has occured: %s\n", PNGW_ERROR_DESCRIPTIONS[err]);
+		printf("an error has occured: out of memory\n");
 		return 1;
 	}
 
