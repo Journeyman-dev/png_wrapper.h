@@ -59,6 +59,8 @@ typedef enum pngw_color
 // array of color type names, indexable by pngw_color enum values.
 extern const char* const const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT];
 
+#define PNGW_DEFAULT_ROW_OFFSET 0
+
 // Get information about a png image file's format. Depth may be 1, 2, 4, 8, or 16. Color may be any type.
 pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* const height, size_t* const depth, pngw_color* const color);
 
@@ -310,6 +312,15 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 		(png_color_type == PNG_COLOR_TYPE_GRAY || png_color_type == PNG_COLOR_TYPE_GRAY_ALPHA))
 	{
 		png_set_gray_to_rgb(png_ptr);
+	}
+	int actual_row_offset;
+	if (row_offset == PNGW_DEFAULT_ROW_OFFSET)
+	{
+		actual_row_offset = width * (size_t)color * (depth / 8);
+	}
+	else
+	{
+		actual_row_offset = row_offset;
 	}
 	/* Load the pixels */
 	for (size_t y = 0; y < height; y++)
