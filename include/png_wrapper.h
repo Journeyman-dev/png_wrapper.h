@@ -120,6 +120,10 @@ const char* const const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT] =
 
 pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* const height, size_t* const depth, pngw_color* const color)
 {
+	if (path == NULL)
+	{
+		return PNGW_ERROR_NULL_ARG;
+	}
 	FILE* f = fopen(path, "rb");
 	if (f == NULL)
 	{
@@ -196,6 +200,10 @@ pngw_error pngwDataSize(const size_t width, const size_t height, const size_t de
 
 pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_t row_offset, const size_t width, const size_t height, const size_t depth, const pngw_color color)
 {
+	if (path == NULL || data == NULL)
+	{
+		return PNGW_ERROR_NULL_ARG;
+	}
 	/* Initial arg checks */
 	if (!(color >= PNGW_COLOR_G && color <= PNGW_COLOR_RGBA)
 	{
@@ -336,6 +344,10 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 
 pngw_error pngwWriteFile(const char* path, pngwb_t* const data, const size_t row_offset, const size_t width, const size_t height, const size_t depth, const pngw_color color)
 {
+	if (path == NULL || data == NULL)
+	{
+		return PNGW_ERROR_NULL_ARG;
+	}
 	/* Create the file */
 	FILE* f = fopen(path.data(), "wb");
 	if (!f)
