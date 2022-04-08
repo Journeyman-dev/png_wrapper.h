@@ -137,7 +137,7 @@ pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* con
 		return PNGW_ERROR_INVALID_FILE_SIGNITURE;
 	}
 	png_structp png_ptr;
-	info_structp info_ptr;
+	png_infop info_ptr;
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 	if (!png_ptr)
 	{
@@ -147,17 +147,17 @@ pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* con
 	info_ptr = png_create_info_struct(png_ptr);
 	if (!info_ptr)
 	{
-		fclose(*f);
-		png_destroy_read_struct(png_ptr, NULL, NULL);
+		fclose(f);
+		png_destroy_read_struct(&png_ptr, NULL, NULL);
 		return PNGW_ERROR_OUT_OF_MEMORY;
 	}
 	png_init_io(png_ptr, f);
 	png_set_sig_bytes(png_ptr, 8);
-	png_read_info(*png_ptr, info_ptr);
+	png_read_info(png_ptr, info_ptr);
 	int png_width, png_height, png_bit_depth, png_color_type;
 	png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &png_bit_depth, &png_color_type, NULL, NULL, NULL);
 	fclose(f);
-	png_destroy_read_struct(png_ptr, info_ptr, NULL);
+	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 	if (width != NULL)
 	{
 		*width = (size_t)png_width;
@@ -168,18 +168,18 @@ pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* con
 	}
 	if (depth != NULL)
 	{
-		*depth = (size_t)png_depth;
+		*depth = (size_t)png_bit_depth;
 	}
 	if (color != NULL)
 	{
-		*color = pngwPngColorToColor(png_color);
+		*color = pngwPngColorToColor(png_color_type);
 	}
 	return PNGW_ERROR_NONE;
 }
 
 pngw_error pngwDataSize(const size_t width, const size_t height, const size_t depth, const pngw_color color, size_t* const size)
 {
-	if (!(color >= PNGW_COLOR_G && color <= PNGW_COLOR_RGBA)
+	if (!(color >= PNGW_COLOR_G && color <= PNGW_COLOR_RGBA))
 	{
 		return PNGW_ERROR_INVALID_COLOR;
 	}
@@ -205,7 +205,7 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 		return PNGW_ERROR_NULL_ARG;
 	}
 	/* Initial arg checks */
-	if (!(color >= PNGW_COLOR_G && color <= PNGW_COLOR_RGBA)
+	if (!(color >= PNGW_COLOR_G && color <= PNGW_COLOR_RGBA))
 	{
 		return PNGW_ERROR_INVALID_COLOR;
 	}
@@ -215,7 +215,7 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 	}
 	/* Open file */
 	FILE* f = fopen(path, "rb");
-	if (*f == NULL)
+	if (f == NULL)
 	{
 		return PNGW_ERROR_FILE_NOT_FOUND;
 	}
@@ -224,12 +224,12 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 	fread(signiture, 1, 8, f);
 	if (png_sig_cmp((png_const_bytep)&signiture[0], 0, 8))
 	{
-		fclose(*f);
+		fclose(f);
 		return PNGW_ERROR_INVALID_FILE_SIGNITURE;
 	}
 	/* Create libpng structs */
 	png_structp png_ptr;
-	info_structp info_ptr;
+	png_infop info_ptr;
 	png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 	if (!png_ptr)
 	{
@@ -240,26 +240,26 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 	if (!info_ptr)
 	{
 		fclose(f);
-		png_destroy_read_struct(png_ptr, NULL, NULL);
+		png_destroy_read_struct(&png_ptr, NULL, NULL);
 		return PNGW_ERROR_OUT_OF_MEMORY;
 	}
 	/* Create jump buffer to handle errors */
 	if (setjmp(png_jmpbuf(png_ptr)))
 	{
 		fclose(f);
-		png_destroy_read_struct(png_ptr, info_ptr, NULL);
+		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 		return PNGW_ERROR_JUMP_BUFFER_CALLED;
 	}
 	/* Get png format from file */
 	png_init_io(png_ptr, f);
 	png_set_sig_bytes(png_ptr, 8);
-	png_read_info(*png_ptr, info_ptr);
+	png_read_info(png_ptr, info_ptr);
 	int png_width, png_height, png_bit_depth, png_color_type;
 	png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &png_bit_depth, &png_color_type, NULL, NULL, NULL);
 	if (width != (size_t)png_width || (size_t)png_height == 0)
 	{
 		fclose(f);
-		png_destroy_read_struct(png_ptr, info_ptr, NULL);
+		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 		return PNGW_ERROR_INVALID_DIMENSIONS;
 	}
 	int load_png_color_type = pngwColorToPngColor(color);
@@ -333,11 +333,11 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 	/* Load the pixels */
 	for (size_t y = 0; y < height; y++)
 	{
-		png_bytep row_start = &data[(y * (row_pixel_offset)) * (size_t)load_color_type * depth];
+		png_bytep row_start = &data[y * actual_row_offset];
 		png_read_row(png_ptr, row_start, NULL);
 	}
 	/* Cleanup */
-	png_destroy_read_struct(png_ptr, info_ptr, NULL);
+	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 	fclose(f);
 	return PNGW_ERROR_NONE;
 }
@@ -349,14 +349,14 @@ pngw_error pngwWriteFile(const char* path, pngwb_t* const data, const size_t row
 		return PNGW_ERROR_NULL_ARG;
 	}
 	/* Create the file */
-	FILE* f = fopen(path.data(), "wb");
+	FILE* f = fopen(path, "wb");
 	if (!f)
 	{
 		return PNGW_ERROR_FILE_CREATION_FAILURE;
 	}
 	/* Create libpng structs */
 	png_structp png_ptr;
-	info_structp info_ptr;
+	png_infop info_ptr;
 	png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 	if (!png_ptr)
 	{
@@ -367,14 +367,14 @@ pngw_error pngwWriteFile(const char* path, pngwb_t* const data, const size_t row
 	if (!info_ptr)
 	{
 		fclose(f);
-		png_destroy_read_struct(png_ptr, NULL, NULL);
+		png_destroy_read_struct(&png_ptr, NULL, NULL);
 		return PNGW_ERROR_OUT_OF_MEMORY;
 	}
 	/* Create jump buffer to handle errors */
 	if (setjmp(png_jmpbuf(png_ptr)))
 	{
 		fclose(f);
-		png_destroy_read_struct(png_ptr, info_ptr, NULL);
+		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 		return PNGW_ERROR_JUMP_BUFFER_CALLED;
 	}
 	const int png_color_type = pngwColorToPngColor(color);
@@ -394,8 +394,8 @@ pngw_error pngwWriteFile(const char* path, pngwb_t* const data, const size_t row
 	}
 	for (size_t y = 0; y < height; y++)
 	{
-		const size_t cur_row_start_i = page_start + (y * width * (size_t)color * depth);
-		png_write_row(png_ptr, data + cur_row_start_i);
+		png_bytep row_start = &data[y * actual_row_offset];
+		png_write_row(png_ptr, row_start);
 	}
 	png_write_end(png_ptr, NULL);
 	fclose(f);
@@ -405,12 +405,12 @@ pngw_error pngwWriteFile(const char* path, pngwb_t* const data, const size_t row
 
 pngwb_t pngGrayFromColor8(const pngwb_t r, const pngwb_t g, const pngwb_t b)
 {
-	return ((((6969 * ((uint32_t)r))) + (23434 * ((uint32_t)(g))) + (2365 * ((uint32_t)(b)))) / 32768));
+	return ((((6969 * ((uint32_t)r))) + (23434 * ((uint32_t)g)) + (2365 * ((uint32_t)b))) / 32768);
 }
 
 pngws_t pngGrayFromColor16(const pngws_t r, const pngws_t g, const pngws_t b)
 {
-	return ((((6969 * ((uint64_t)r))) + (23434 * ((uint64_t)(g))) + (2365 * ((uint64_t)(b)))) / 32768));
+	return ((((6969 * ((uint64_t)r))) + (23434 * ((uint64_t)g)) + (2365 * ((uint64_t)b))) / 32768);
 }
 
 int pngwColorToPngColor(const pngw_color color)
@@ -434,20 +434,20 @@ int pngwColorToPngColor(const pngw_color color)
 
 pngw_color pngwPngColorToColor(const int png_color)
 {
-	switch (color)
+	switch (png_color)
 	{
 		case PNG_COLOR_TYPE_PALETTE:
 			return PNGW_COLOR_PALETTE;
 		case PNG_COLOR_TYPE_GRAY:
 			return PNGW_COLOR_G;
-		case PNG_COLOR_TYPE_GRAY_ALPHA 
+		case PNG_COLOR_TYPE_GRAY_ALPHA:
 			return PNGW_COLOR_GA;
 		case PNG_COLOR_TYPE_RGB:
 			return PNGW_COLOR_RGB;
 		case PNG_COLOR_TYPE_RGBA:
 			return PNGW_COLOR_RGBA;
 		default:
-			return PNGW_COLOR_GRAY;
+			return PNGW_COLOR_G;
 	}
 }
 
