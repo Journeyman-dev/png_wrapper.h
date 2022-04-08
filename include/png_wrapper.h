@@ -40,6 +40,9 @@ typedef enum pngw_error
 	PNGW_ERROR_COUNT = 10
 } pngw_error;
 
+// array of error descriptions, indexable by pngw_error enum values.
+extern const char* const const PNGW_ERROR_DESCRIPTIONS[PNGW_ERROR_COUNT];
+
 typedef enum pngw_color
 {
 	PNGW_COLOR_PALETTE = 0,
@@ -49,6 +52,9 @@ typedef enum pngw_color
 	PNGW_COLOR_RGBA = 4,
 	PNGW_COLOR_COUNT = 5,
 } pngw_color;
+
+// array of color type names, indexable by pngw_color enum values.
+extern const char* const const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT];
 
 // Get information about a png image file's format. Depth may be 1, 2, 4, 8, or 16. Color may be any type.
 pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* const height, size_t* const depth, pngw_color* const color);
@@ -83,6 +89,29 @@ pngw_color pngwPngColorToColor(const int png_color);
 #ifndef PNG_H
 #error png.h must be included before png_wrapper.h can be implemented.
 #endif
+
+const char* const const PNGW_ERROR_DESCRIPTIONS[PNGW_ERROR_COUNT] =
+{
+	"no error has occured",
+	"file not found at path",
+	"failed to create file",
+	"out of memory",
+	"invalid file signiture",
+	"jump buffer called",
+	"NULL argument",
+	"invalid bit depth",
+	"invalid color type",
+	"invalid pixel dimensions"
+};
+
+const char* const const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT] =
+{
+	"Palette",
+	"G",
+	"GA",
+	"RGB",
+	"RGBA"
+};
 
 pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* const height, size_t* const depth, pngw_color* const color)
 {
