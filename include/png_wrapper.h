@@ -216,6 +216,8 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
 	png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &png_bit_depth, &png_color_type, NULL, NULL, NULL);
 	if (width != (size_t)png_width || (size_t)png_height == 0)
 	{
+		fclose(f);
+		png_destroy_read_struct(png_ptr, info_ptr, NULL);
 		return PNGW_ERROR_INVALID_DIMENSIONS;
 	}
 	int load_png_color_type = pngwColorToPngColor(color);
