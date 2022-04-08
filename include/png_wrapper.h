@@ -383,6 +383,15 @@ pngw_error pngwWriteFile(const char* path, pngwb_t* const data, const size_t row
 	// Set the compression to a setup that will be good enough. No need for more complicated options in this library.
 	png_set_IHDR(png_ptr, info_ptr, (uint32_t)width, (uint32_t)height, (int)depth, png_color_type, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 	png_write_info(png_ptr, info_ptr);
+	int actual_row_offset;
+	if (row_offset == PNGW_DEFAULT_ROW_OFFSET)
+	{
+		actual_row_offset = width * (size_t)color * (depth / 8);
+	}
+	else
+	{
+		actual_row_offset = row_offset;
+	}
 	for (size_t y = 0; y < height; y++)
 	{
 		const size_t cur_row_start_i = page_start + (y * width * (size_t)color * depth);
