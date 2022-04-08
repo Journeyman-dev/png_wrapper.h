@@ -18,7 +18,10 @@
 
 #ifndef PNGW_H
 #define PNGW_H
-
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 #include <stddef.h>
 #include <stdint.h>
 
@@ -418,5 +421,7 @@ pngw_color pngwPngColorToColor(const int png_color)
 
 #endif
 #endif
-
-#endf
+#ifdef __cplusplus
+}
+#endif
+#endif
