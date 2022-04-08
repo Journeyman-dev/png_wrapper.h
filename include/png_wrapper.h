@@ -47,7 +47,7 @@ typedef enum pngw_color
 	PNGW_COLOR_GA = 2,
 	PNGW_COLOR_RGB = 3,
 	PNGW_COLOR_RGBA = 4,
-	PNGW_COLOR_COUNT = 6,
+	PNGW_COLOR_COUNT = 5,
 } pngw_color;
 
 // Get information about a png image file's format. Depth may be 1, 2, 4, 8, or 16. Color may be any type.
