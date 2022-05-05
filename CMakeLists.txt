@@ -7,7 +7,7 @@ endif()
 option(PNGW_BUILD_EXAMPLES "Build the example projects" OFF)
 
 PROJECT(png_wrapper.h
-	VERSION 0.0
+	VERSION 1.0
 	DESCRIPTION "A header only libpng wrapper library."
 	LANGUAGES C
 )

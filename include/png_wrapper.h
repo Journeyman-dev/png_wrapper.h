@@ -16,6 +16,12 @@
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/*
+
+	png_wrapper.h version 1.0.0
+	
+ */
+
 #ifndef PNGW_H
 #define PNGW_H
 #ifdef __cplusplus
