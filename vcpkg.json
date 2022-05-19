@@ -1,8 +1,0 @@
-{
-	"name": "png-wrapper-h",
-	"version-string": "1.0.0",
-	"license": "MIT",
-	"dependencies": [
-	"libpng"
-  ]
-}
