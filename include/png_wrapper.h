@@ -161,7 +161,7 @@ pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* con
     png_set_sig_bytes(png_ptr, 8);
     png_read_info(png_ptr, info_ptr);
     png_uint_32 png_width, png_height;
-    int png_width, png_height, png_bit_depth, png_color_type;
+    int png_bit_depth, png_color_type;
     png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &png_bit_depth, &png_color_type, NULL, NULL, NULL);
     fclose(f);
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
