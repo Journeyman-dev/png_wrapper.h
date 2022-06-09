@@ -18,8 +18,8 @@
 
 /*
 
-    png_wrapper.h version 1.0.0
-    
+    png_wrapper.h version 1.1.0
+
  */
 
 #ifndef PNGW_H
