@@ -70,7 +70,7 @@ extern const char* const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT];
 // Get information about a png image file's format. Depth may be 1, 2, 4, 8, or 16. Color may be any type.
 pngw_error pngwFileInfo(const char* const path, size_t* const width, size_t* const height, size_t* const depth, pngw_color* const color);
 
-// Get the size of image data in bytes. Depth must be 8 or 16. Color may not be PNGW_COLOR_PALETTE. 
+// Get the size of image data in bytes. Depth must be 8 or 16. Color may not be PNGW_COLOR_PALETTE.
 pngw_error pngwDataSize(const size_t width, const size_t height, const size_t depth, const pngw_color color, size_t* const size);
 
 // Read png data from a file into a pixel byte array with the specified format. Data should be allocated before this function is called with enough space to contain the bytes. If the file is of a different format than specified in the arguments, the image will be converted on load. Depth must be 8 or 16. Color may not be PNGW_COLOR_PALETTE. Width and height must match the actual width and height of the image, which you can retrieve with pngwFileInfo() before loading. 
@@ -101,7 +101,7 @@ pngw_color pngwPngColorToColor(const int png_color);
 #error png.h must be included before png_wrapper.h can be implemented.
 #endif
 
-const char* const const PNGW_ERROR_DESCRIPTIONS[PNGW_ERROR_COUNT] =
+const char* const PNGW_ERROR_DESCRIPTIONS[PNGW_ERROR_COUNT] =
 {
     "no error has occured",
     "file not found at path",
@@ -115,7 +115,7 @@ const char* const const PNGW_ERROR_DESCRIPTIONS[PNGW_ERROR_COUNT] =
     "invalid pixel dimensions"
 };
 
-const char* const const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT] =
+const char* const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT] =
 {
     "Palette",
     "G",
