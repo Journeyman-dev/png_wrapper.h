@@ -50,7 +50,7 @@ typedef enum pngw_error
 } pngw_error;
 
 // array of error descriptions, indexable by pngw_error enum values.
-extern const char* const const PNGW_ERROR_DESCRIPTIONS[PNGW_ERROR_COUNT];
+extern const char* const PNGW_ERROR_DESCRIPTIONS[PNGW_ERROR_COUNT];
 
 typedef enum pngw_color
 {
@@ -63,7 +63,7 @@ typedef enum pngw_color
 } pngw_color;
 
 // array of color type names, indexable by pngw_color enum values.
-extern const char* const const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT];
+extern const char* const PNGW_COLOR_NAMES[PNGW_COLOR_COUNT];
 
 #define PNGW_DEFAULT_ROW_OFFSET 0
 
