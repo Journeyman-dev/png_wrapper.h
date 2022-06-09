@@ -261,7 +261,8 @@ pngw_error pngwReadFile(const char* const path, pngwb_t* const data, const size_
     png_init_io(png_ptr, f);
     png_set_sig_bytes(png_ptr, 8);
     png_read_info(png_ptr, info_ptr);
-    int png_width, png_height, png_bit_depth, png_color_type;
+    png_uint_32 png_width, png_height;
+    int png_bit_depth, png_color_type;
     png_get_IHDR(png_ptr, info_ptr, &png_width, &png_height, &png_bit_depth, &png_color_type, NULL, NULL, NULL);
     if (width != (size_t)png_width || (size_t)png_height == 0)
     {
