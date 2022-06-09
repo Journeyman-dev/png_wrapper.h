@@ -18,7 +18,7 @@
 
 /*
 
-    png_wrapper.h version 1.1.0
+    png_wrapper.h version 1.2.0
 
  */
 
